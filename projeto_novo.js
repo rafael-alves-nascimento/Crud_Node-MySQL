@@ -44,20 +44,34 @@ app.delete('/:matricula', function (req, res) {
   })
 
 //Post  
-app.post('/POST', (req, res) => {
-    let emp = req.body;
-    var sql = "SET @Matricula = ?;SET @CPF = ?;SET @Nome = ?;SET @idade = ?; \
-    CALL ADDouEditar(@Matricula,@CPF,@Nome,@idade);";
-    mysqlConnection.query(sql, [emp.Matricula, emp.CPF, emp.Nome, emp.idade], (err, rows, fields) => {
-        if (!err)
-            rows.forEach(element => {
-                if(element.constructor == Array)
-                res.send('Inserted alunos_info id : '+element[0].Matricula);
-            });
-        else
-            console.log(err);
-    })
-});
+// app.post('/POST', (req, res) => {
+//     let emp = req.body;
+//     var sql = "SET @Matricula = ?;SET @CPF = ?;SET @Nome = ?;SET @idade = ?; \
+//     CALL ADDouEditar(@Matricula,@CPF,@Nome,@idade);";
+//     mysqlConnection.query(sql, [emp.Matricula, emp.CPF, emp.Nome, emp.idade], (err, rows, fields) => {
+//         if (!err)
+//             rows.forEach(element => {
+//                 if(element.constructor == Array)
+//                 res.send('Inserted alunos_info id : '+element[0].Matricula);
+//             });
+//         else
+//             console.log(err);
+//     })
+// });
+
+// post 2.0
+app.post('/post', function (req, res) {
+    res.status(201)
+    let mudanca = Object.values(req.body);
+    console.log(mudanca)
+    let sqlf = 'INSERT INTO alunos_info VALUES (?,?,?,?)'
+    mysqlConnection.query(sqlf,mudanca, function(err, result){
+    if(err) throw err
+    console.log('Conectado')
+    console.log('dado adicionado')
+  })
+  res.send(`O dado foi adicionado`)
+})
 
 //Update  
 app.put('/PUT', (req, res) => {
